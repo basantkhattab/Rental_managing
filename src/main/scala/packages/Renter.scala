@@ -7,5 +7,8 @@ class Renter(val name: String, val contactInfo: String):
 
   def addRentalRecord(rentalRecord: RentalRecord): Unit =
     rentalRecords += rentalRecord
+  
+  def removeRentalRecord(rentalRecord: RentalRecord): Unit=
+    rentalRecords -= rentalRecord
 
 

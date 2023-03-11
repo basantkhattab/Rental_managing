@@ -9,7 +9,7 @@ class Item (val name: String, val description: String, val price: Double, val da
 
   // Returns the price for renting the item for the given duration
   def getPrice(duration: Duration): Double =
-      val days = duration.toDays()
+      val days = duration.toDays
       val weeks = days / 7
       val months = days / 30
       if (months > 0)
