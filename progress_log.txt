@@ -1,0 +1,9 @@
+The project has had a slower start than expected. I was having trouble with the version control in the
+beginning and was unable to push anything, but now it is working well.
+All planned classes have been created and methods planned out.
+Item class method getPrice done (not tested).
+RentalManager class all methods done (not tested).
+Having trouble with the AccountingManager class but hopefully the methods will be done within a few days
+I have worked around 15 hours on the project so far mainly researching and relearning things I don't remember
+The project is slightly behind schedule since it was difficult to get started but my pace is becoming faster.
+
