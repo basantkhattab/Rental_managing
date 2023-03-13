@@ -2,7 +2,7 @@ package packages
 import scala.collection.mutable.ListBuffer
 import java.time.*
 
-class Item (val name: String, val description: String, val price: Double, val dailyPrice: Double, val weeklyPrice: Double, val monthlyPrice: Double, var availableCount: Int):
+class Item (val name: String, val description: String,val itemType: String, val price: Double, val dailyPrice: Double, val weeklyPrice: Double, val monthlyPrice: Double, var availableCount: Int):
   val comments = ListBuffer[String]()
   def addComment(comment: String): Unit =
     comments += comment

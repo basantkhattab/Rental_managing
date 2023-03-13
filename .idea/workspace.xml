@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94a2b2a0-ef02-4f59-a2a2-9375817a456b" name="Changes" comment="RentalManager class all methods done">
-      <change afterPath="$PROJECT_DIR$/progress_log.txt" afterDir="false" />
+    <list default="true" id="94a2b2a0-ef02-4f59-a2a2-9375817a456b" name="Changes" comment="Interim report">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/packages/AccountingManager.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/packages/AccountingManager.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/packages/Item.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/packages/Item.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-3.0.0/classes/packages/AccountingManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-3.0.0/classes/packages/AccountingManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-3.0.0/classes/packages/AccountingManager.tasty" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-3.0.0/classes/packages/AccountingManager.tasty" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-3.0.0/classes/packages/Item.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-3.0.0/classes/packages/Item.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-3.0.0/classes/packages/Item.tasty" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-3.0.0/classes/packages/Item.tasty" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +147,14 @@
       <option name="project" value="LOCAL" />
       <updated>1678546893858</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Interim report">
+      <created>1678556009219</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1678556009219</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -172,6 +184,7 @@
     <MESSAGE value="Created local repository" />
     <MESSAGE value="classes done" />
     <MESSAGE value="RentalManager class all methods done" />
-    <option name="LAST_COMMIT_MESSAGE" value="RentalManager class all methods done" />
+    <MESSAGE value="Interim report" />
+    <option name="LAST_COMMIT_MESSAGE" value="Interim report" />
   </component>
 </project>

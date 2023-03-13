@@ -9,31 +9,9 @@ class AccountingManager:
     transactions += transaction
 
   def getIncomeByItem(item: Item, startDate: LocalDate, endDate: LocalDate): Double =
-
-    /*var income= 0.0
-    for (rental <- rentalRecords)
-      if (rental.item == item && rental.rentStart.isBefore(endDate) && rental.rentEnd.isAfter(startDate)) then
-        val rentalDuration = Duration.between(
-          if (rental.rentStart.isBefore(startDate)) startDate.atStartOfDay(), rental.rentStart.atStartOfDay()
-            ).toDays() + Duration.between(
-              rental.rentStart.atStartOfDay(), if (rental.rentEnd.isAfter(endDate)) endDate.atStartOfDay()
-              else rental.rentEnd.atStartOfDay()
-            ).toDays() + 1
-        val rentalCost = item.getPrice(rentalDuration)
-        income = income + rentalCost
-    income
-
-  val rentalManager = new RentalManager()
-  var income = 0.0
-
-  rentalManager.rentalRecords.foreach(
-    rentalRecord => if (rentalRecord.item == item && rentalRecord.rentStart.isAfter(startDate) && rentalRecord.rentEnd.isBefore(endDate))
-      income += rentalRecord.cost*/
-
-
     val rentalManager = new RentalManager()
     val rentalRecords = rentalManager.rentalRecords.filter(record =>
-      record.item == item && record.rentStart.isBefore(endDate) && record.rentEnd.isAfter(startDate))
+    record.item == item && record.rentStart.isBefore(endDate) && record.rentEnd.isAfter(startDate))
     rentalRecords.map(record => item.getPrice(Duration.between(record.rentStart.atStartOfDay(), record.rentEnd.atStartOfDay()))).sum
 
     // Calculate income for item between start_date and end_date
@@ -41,19 +19,32 @@ class AccountingManager:
 
 
 
-  def getIncomeByItemType(itemType: String, startDate: LocalDate, endDate: LocalDate): Double =
+  def getIncomeByItemType(itemtype: String, startDate: LocalDate, endDate: LocalDate): Double =
     // Calculate income for all items of item_type between start_date and end_date
     // Return income
-    ???
+    val rentalManager = new RentalManager()
+    val rentalRecords=rentalManager.rentalRecords.filter(record=>
+      record.item.itemType==itemtype && record.rentStart.isBefore(endDate) && record.rentEnd.isAfter(startDate))
+    rentalRecords.foldLeft(0.0)((total, record) => total + record.cost)
 
   def getExpensesByItem(item: Item, startDate: LocalDate, endDate: LocalDate): Double =
     // Calculate expenses for item between start_date and end_date
     // Return expenses
-    ???
+    val rentalManager= new RentalManager()
+    val rentalRecords= rentalManager.rentalRecords.filter(record=>
+      record.item== item && record.rentStart.isBefore(endDate) && record.rentEnd.isAfter(startDate))
+    rentalRecords.map(_.item.price).sum
+
 
   def getExpensesByItemType(itemType: String, startDate: LocalDate, endDate: LocalDate): Double =
     // Calculate expenses for all items of item_type between start_date and end_date
     // Return expenses
-    ???
+    val rentalManager= new RentalManager()
+    val rentalRecords=rentalManager.rentalRecords.filter(record=>
+      record.item.itemType==itemtype && record.rentStart.isBefore(endDate) && record.rentEnd.isAfter(startDate))
+    rentalRecords.map(_.item.price).sum
+
+
+
 
 
