@@ -1,3 +1,4 @@
+Interim report 1
 The project has had a slower start than expected. I was having trouble with the version control in the
 beginning and was unable to push anything, but now it is working well.
 All planned classes have been created and methods planned out.
@@ -6,4 +7,14 @@ RentalManager class all methods done (not tested).
 Having trouble with the AccountingManager class but hopefully the methods will be done within a few days
 I have worked around 15 hours on the project so far mainly researching and relearning things I don't remember
 The project is slightly behind schedule since it was difficult to get started but my pace is becoming faster.
+
+Interim report 2
+All of the classes are finished to some extent, there will still be changes as I haven't really tested much
+but I am at a phase where I can start working on the GUI and testing as I go. I have tried to do work on the file
+management but I am not sure if it works properly. I'm having a bit of trouble with the GUI as I haven't used
+scala FX before and the resources are limited. In the past weeks I have used around 30 hours on the project mainly
+researching how scala FX and file management works and trying to implement small things.
+Hopefully within the next couple of weeks I will finish the GUI so that I can proceed with more in detail testing
+and finalizing the project.
+
 

@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="sbt: org.scala-lang:scala3-library_3:3.0.0:jar" type="Scala">
+  <library name="sbt: org.scala-lang:scala3-library_3:3.0.2:jar" type="Scala">
     <properties>
       <language-level>Scala_3_0</language-level>
       <compiler-classpath>
@@ -50,13 +50,13 @@
       </scaladoc-extra-classpath>
     </properties>
     <CLASSES>
-      <root url="jar://$USER_HOME$/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.0.0/scala3-library_3-3.0.0.jar!/" />
+      <root url="jar://$USER_HOME$/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.0.2/scala3-library_3-3.0.2.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.0.0/scala3-library_3-3.0.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.0.2/scala3-library_3-3.0.2-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$USER_HOME$/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.0.0/scala3-library_3-3.0.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.0.2/scala3-library_3-3.0.2-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

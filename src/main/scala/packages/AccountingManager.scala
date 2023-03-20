@@ -3,8 +3,10 @@ import scala.collection.mutable.ListBuffer
 import java.time.*
 
 class AccountingManager:
+  
   val transactions = ListBuffer[Double]()
   val rentalRecords = ListBuffer[RentalRecord]()
+  
   def addTransaction(transaction: Double): Unit =
     transactions += transaction
 
@@ -41,7 +43,7 @@ class AccountingManager:
     // Return expenses
     val rentalManager= new RentalManager()
     val rentalRecords=rentalManager.rentalRecords.filter(record=>
-      record.item.itemType==itemtype && record.rentStart.isBefore(endDate) && record.rentEnd.isAfter(startDate))
+      record.item.itemType== itemType && record.rentStart.isBefore(endDate) && record.rentEnd.isAfter(startDate))
     rentalRecords.map(_.item.price).sum
 
 

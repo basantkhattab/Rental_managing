@@ -1,8 +1,10 @@
 package packages
+import java.io.*
 import scala.collection.mutable.*
 import java.time.*
 
 class RentalManager:
+  
   val items = ListBuffer[Item]()
   val renters = ListBuffer[Renter]()
   val rentalRecords = ListBuffer[RentalRecord]()
@@ -10,7 +12,7 @@ class RentalManager:
 
   def addItem(item: Item): Unit = 
     items += item
-  
+
 
   def removeItem(item: Item): Unit = 
     items -= item
@@ -29,6 +31,7 @@ class RentalManager:
       renter.addRentalRecord(rentalRecord)
       rentalRecords += rentalRecord
       rentalRecord
+
     else
       throw IllegalArgumentException("Item not available")
 
@@ -68,5 +71,15 @@ class RentalManager:
 
   def removeReservation(reservation: Reservation): Unit =
     reservations -= reservation
+
+  def saveToFile(rentalRecords: ListBuffer[RentalRecord], name: String): Unit =
+    val file = new File(name)
+    val printwrite = new PrintWriter(file)
+
+    rentalRecords.foreach(record => printwrite.println(
+      s"${record.renter.toString},${record.item.toString},${record.count},${record.rentStart},${record.rentEnd},${record.cost}"))
+    printwrite.close()
+
+  def save(): Unit = saveToFile(rentalRecords, "rental_records.csv")
 
 
