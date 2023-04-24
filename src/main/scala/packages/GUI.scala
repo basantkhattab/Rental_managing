@@ -552,9 +552,171 @@ object GUI extends JFXApp3:
       val accounting= new Button("accounting")
         accounting.onAction = (e: ActionEvent) => stage.setScene(scene3)
       val backbutton3=new Button("back")
-        root3.add(backbutton3,2,3)
-        backbutton3.onAction= (e: ActionEvent) => stage.setScene(scene)
 
+        backbutton3.onAction= (e: ActionEvent) => stage.setScene(scene)
+      val button1= new Button("Income by ItemType")
+      val button2= new Button("Income by Item")
+      val button3= new Button("Expenses by ItemType")
+      val button4= new Button("Expenses by Item")
+      val accountingmanager= new AccountingManager
+
+      val hbox= new HBox(20,button1,button2,button3,button4,backbutton3)
+      root3.children+=hbox
+
+      def incomebyitemtype=
+        val box = new VBox()
+        root3.add(box,0,1)
+        val label= new Label("Write ItemType")
+        val back= new Button("Back")
+        box.children+= back
+        back.onAction= (e: ActionEvent)=>
+          box.visible = false
+          back.visible= false
+        box.children+= label
+
+
+
+        val textbox= new TextField()
+        box.children+= textbox
+
+        val enter= new Button("Enter")
+
+
+        box.children+=Label("Choose starting date")
+        val date1= new DatePicker(LocalDate.now)
+        box.children+=date1
+
+        box.children+=Label("Choose end date")
+        val date2= new DatePicker(LocalDate.now)
+        box.children+=date2
+        box.children+= enter
+        enter.onAction=(e: ActionEvent) =>
+          try
+            val value = textbox.text.value
+            val rentalRecords=rentalmanager.rentalRecords.filter(record=>record.item.itemType==value && !record.rentEnd.isBefore(date1.getValue.atTime(00,00)) && !record.rentStart.isAfter(date2.getValue.atTime(23,59)))
+            println(rentalRecords)
+            val joku= rentalRecords.map(_.cost).sum
+
+            box.children+= Label(s"Total income for this item type: ${joku.toString}€")
+          catch
+            case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+            case c:NoSuchElementException => box.children+= Label("Item doesn't exist")
+      end incomebyitemtype
+
+
+
+      def incomebyitem=
+        val box = new VBox()
+        root3.add(box,0,1)
+        val label= new Label("Write item name")
+        val back= new Button("Back")
+        box.children+= back
+        back.onAction= (e: ActionEvent)=>
+          box.visible = false
+          back.visible= false
+
+        box.children+= label
+
+        val textbox= new TextField()
+        box.children+= textbox
+        val enter= new Button("Enter")
+        box.children+=Label("Choose starting date")
+        val date1= new DatePicker(LocalDate.now)
+        box.children+=date1
+        box.children+=Label("Choose end date")
+        val date2= new DatePicker(LocalDate.now)
+        box.children+=date2
+        box.children+= enter
+        enter.onAction=(e: ActionEvent) =>
+          try
+            val value = textbox.text.value
+            val rentalRecords=rentalmanager.rentalRecords.filter(record=>record.item.name==value && !record.rentEnd.isBefore(date1.getValue.atStartOfDay) && !record.rentStart.isAfter(date2.getValue.atTime(23,59)))
+            println(rentalRecords)
+            val joku= rentalRecords.map(_.cost).sum
+
+            box.children+= Label(s"Total income for this item: ${joku.toString}€")
+          catch
+            case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+            case c:NoSuchElementException => box.children+= Label("Item doesn't exist")
+
+
+      def expensesbyitemtype=
+        val box = new VBox()
+        root3.add(box,0,1)
+        val label= new Label("Write ItemType")
+        val back= new Button("Back")
+        box.children+= back
+        back.onAction= (e: ActionEvent)=>
+          box.visible = false
+          back.visible= false
+        box.children+= label
+
+
+
+        val textbox= new TextField()
+        box.children+= textbox
+
+        val enter= new Button("Enter")
+
+
+        box.children+=Label("Choose starting date")
+        val date1= new DatePicker(LocalDate.now)
+        box.children+=date1
+
+        box.children+=Label("Choose end date")
+        val date2= new DatePicker(LocalDate.now)
+        box.children+=date2
+        box.children+= enter
+        enter.onAction=(e: ActionEvent) =>
+          try
+            val value = textbox.text.value
+            val rentalRecords=rentalmanager.rentalRecords.filter(record=>record.item.itemType==value && !record.rentEnd.isBefore(date1.getValue.atStartOfDay) && !record.rentStart.isAfter(date2.getValue.atTime(23,59)))
+            println(rentalRecords)
+            val joku= rentalRecords.map(_.item.price).sum
+
+            box.children+= Label(s"Total expenses for this item type: ${joku.toString}€")
+          catch
+            case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+            case c:NoSuchElementException => box.children+= Label("Item doesn't exist")
+
+
+      def expensebyitem=
+        val box = new VBox()
+        root3.add(box,0,1)
+        val label= new Label("Write item name")
+        val back= new Button("Back")
+        box.children+= back
+        back.onAction= (e: ActionEvent)=>
+          box.visible = false
+          back.visible= false
+        box.children+= label
+
+        val textbox= new TextField()
+        box.children+= textbox
+        val enter= new Button("Enter")
+        box.children+=Label("Choose starting date")
+        val date1= new DatePicker(LocalDate.now)
+        box.children+=date1
+        box.children+=Label("Choose end date")
+        val date2= new DatePicker(LocalDate.now)
+        box.children+=date2
+        box.children+= enter
+        enter.onAction=(e: ActionEvent) =>
+          try
+            val value = textbox.text.value
+            val rentalRecords=rentalmanager.rentalRecords.filter(record=>record.item.name==value && !record.rentEnd.isBefore(date1.getValue.atStartOfDay) && !record.rentStart.isAfter(date2.getValue.atTime(23,59)))
+            println(rentalRecords)
+            val joku= rentalRecords.map(_.item.price).sum
+
+            box.children+= Label(s"Total expense for this item: ${joku.toString}€")
+          catch
+            case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+            case c:NoSuchElementException => box.children+= Label("Item doesn't exist")
+
+      button1.onAction= (e: ActionEvent) => incomebyitemtype
+      button2.onAction= (e: ActionEvent) => incomebyitem
+      button3.onAction= (e: ActionEvent) => expensesbyitemtype
+      button4.onAction= (e: ActionEvent) => expensebyitem
 //record view
     def rentalRecord=
       val box= new VBox()
