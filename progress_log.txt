@@ -18,3 +18,10 @@ Hopefully within the next couple of weeks I will finish the GUI so that I can pr
 and finalizing the project.
 
 
+Interim report 3
+Been working on the GUI for the past couple weeks. It has been very slow since I got stuck all the time. At this point
+I'm a bit worried I won't have enough time to finish the project but I am trying to pick up the pace. I think I have finally
+picked up a good flow with the GUI and it is starting to come together. I have spent around 30 hours again these past few weeks
+although I think I should've probably worked more on it. The next few weeks are not as busy for me so I will be using a lot
+more time on the project
+

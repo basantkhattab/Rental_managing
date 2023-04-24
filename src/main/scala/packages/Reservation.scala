@@ -1,6 +1,6 @@
 package packages
 import scala.collection.mutable.ListBuffer
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 
-class Reservation(val renter: Renter, val items: List[Item], val rentStart: LocalDate, val rentEnd: LocalDate)
+class Reservation(val renter: Renter, val item: Item,val count: Int, val rentStart: LocalDateTime, val rentEnd: LocalDateTime)
 
