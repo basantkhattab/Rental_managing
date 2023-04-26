@@ -29,7 +29,12 @@ import javafx.scene.control.{Menu, MenuBar, MenuButton, MenuItem}
 import scalafx.scene.control.Button.sfxButton2jfx
 import javafx.event.EventHandler
 import javafx.event.ActionEvent
+import scala.collection.mutable.ListBuffer
 
+import scala.collection.mutable.Map
+import javafx.scene.chart.PieChart
+import javafx.scene.chart.PieChart.Data
+import javafx.collections.FXCollections
 
 import java.time.*
 import javafx.scene.control.DatePicker
@@ -73,8 +78,7 @@ object GUI extends JFXApp3:
 
 
     val print= new Button("print")
-    print.onAction= (e: ActionEvent) => println(rentalmanager.itemsrecord)
-    root.add(print,0,300)
+
 
     //item view
       val items= new Button("item view")
@@ -82,15 +86,43 @@ object GUI extends JFXApp3:
 
       val itemcheck= new Button("Check items")
 
+      val typecheck = new Button("Check item types")
+
+        root2.add(typecheck,200,800)
+        typecheck.onAction= (e: ActionEvent) =>
+          val box= new VBox()
+          root2.add(box,0,1)
+          box.children+= new Label(s"item types:")
+          println(rentalmanager.itemtypes)
+
+            rentalmanager.itemtypes.foreach(record=> box.children+= new Label(s"${record.toString}"))
+          val back= new Button("Back")
+          box.children+= back
+          back.onAction = (e: ActionEvent) =>
+            box.visible = false
+            back.visible = false
+
+
         root2.add(itemcheck,200,700)
-        itemcheck.onAction= (e: ActionEvent)=>  println(rentalmanager.items)
+        itemcheck.onAction=(e: ActionEvent)=>
+          val box= new VBox()
+          root2.add(box,0,1)
+          box.children+= new Label(s"items:")
+
+            rentalmanager.items.foreach(record=> box.children+= new Label(s"${record.toString}"))
+          val back= new Button("Back")
+          box.children+= back
+          back.onAction = (e: ActionEvent) =>
+            box.visible = false
+            back.visible = false
+
 
       val currentsituation= new Button("Current situation")
         root2.add(currentsituation,200,400)
         currentsituation.onAction= (e: ActionEvent) =>
           val box= new VBox()
           root2.add(box,0,1)
-          val cs= Label(s"Currently there are ${rentalmanager.items.size} items for rent, ${rentalmanager.renteditems.size} are currently rented")
+          val cs= Label(s"Currently there are ${rentalmanager.items.size} items for rent, ${rentalmanager.renteditems.size} are currently rented. To find out when something will become available please check the rented items page")
           box.children+= cs
           val csback= new Button("back")
             box.children+=csback
@@ -100,9 +132,21 @@ object GUI extends JFXApp3:
 
     // change the position to information
 
-      val rentalcheck= new Button("check rented items")
+      val rentalcheck= new Button("Check rented items")
         root2.add(rentalcheck,200,500)
-        rentalcheck.onAction=(e: ActionEvent)=> println(rentalmanager.renteditems)
+        rentalcheck.onAction=(e: ActionEvent)=>
+          val box= new VBox()
+          root2.add(box,0,1)
+          box.children+= new Label(s"items rented are:")
+
+            rentalmanager.renteditems.foreach(record=> box.children+= new Label(s"${record.toString}"))
+          val back= new Button("Back")
+          box.children+= back
+          back.onAction = (e: ActionEvent) =>
+            box.visible = false
+            back.visible = false
+
+
       val save = new Button("save")
         root2.add(save,200,300)
         save.onAction= (e: ActionEvent) =>
@@ -250,8 +294,9 @@ object GUI extends JFXApp3:
               box.children+=success
           catch
             //case e:IndexOutOfBoundsException =>  throw Exception("Write the inputs as asked")
-            case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+            case a:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
             case b:NumberFormatException => box.children+= Label("put the numbers where as asked")
+            case e: IllegalArgumentException => box.children += Label(e.getMessage())
     end rentitem
 
     def returnitem=
@@ -285,9 +330,10 @@ object GUI extends JFXApp3:
             box.children+=success
         catch
             //case e:IndexOutOfBoundsException =>  throw Exception("Write the inputs as asked")
-          case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+          case a:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
           case b:NumberFormatException => box.children+= Label("put the numbers where it is asked")
           case c:NoSuchElementException => box.children+= Label("Item doesn't exist")
+          case e: IllegalArgumentException => box.children += Label(e.getMessage())
     end returnitem
 
     def addreservation=
@@ -295,12 +341,14 @@ object GUI extends JFXApp3:
       val textinput= new TextField
         root2.add(box,0,1)
         box.children+= Label("Reserve Item")
-        box.children+= Label("Write reservers name, item name and count in the format name,item name,count")
+        box.children+= Label("Write reservers name")
         box.layoutX= 70
         box.layoutY = 40
         box.children+=textinput
         textinput.onAction = (e: ActionEvent)=> println(textinput.text.value)
-
+      box.children+= Label("item names and counts in the format name1,count1,name2,count2")
+      val textinput2= new TextField
+      box.children+= textinput2
       box.children+=Label("Put the starting date of the reservation")
       val date1= new DatePicker((LocalDate.now))
         box.children+=date1
@@ -335,21 +383,29 @@ object GUI extends JFXApp3:
       enter.onAction=(e: ActionEvent)=>
 
           try
-            val value=textinput.text.value.split(",")
-            val renter= new Renter(value.head)
-            val item=value(1)
-            val count= value(2).toInt
+            val value=textinput.text.value
+            val value2= textinput2.text.value.split(",")
+            val renter= new Renter(value)
+            val items = ListBuffer[Item]()
+            val counts = ListBuffer[Int]()
+            textinput2.text.value.split(",").grouped(2).toList.foreach(arr=>
+              val item = rentalmanager.items.filter(_.name==arr(0)).head
+              val count = arr(1).toInt
+              items += item
+              counts += count)
+
             val rentstart= date1.getValue.atTime(startingtime.text.value.split(":")(0).toInt,startingtime.text.value.split(":")(1).toInt)
             val rentend= date2.getValue.atTime(endingdate.text.value.split(":")(0).toInt,endingdate.text.value.split(":")(1).toInt)
-            rentalmanager.addReservation(renter,item,count,rentstart,rentend)
+            rentalmanager.addReservation(renter,items,counts,rentstart,rentend)
               box.visible = true
               back.visible = true
             val success= new Label("Item reserved succesfully")
               box.children+=success
           catch
             //case e:IndexOutOfBoundsException =>  throw Exception("Write the inputs as asked")
-            case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+            case a:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
             case b:NumberFormatException => box.children+= Label("put the numbers where as asked")
+            case e: IllegalArgumentException => box.children += Label(e.getMessage())
 
     end addreservation
 
@@ -358,7 +414,7 @@ object GUI extends JFXApp3:
       val textinput= new TextField
         root2.add(box,0,1)
         box.children+= Label("Remove reservation")
-        box.children+= Label("Write reservation name, item name, count")
+        box.children+= Label("Write reservation name,one item name and its count in the format name,item,count")
         box.layoutX= 70
         box.layoutY = 40
         box.children+=textinput
@@ -374,18 +430,23 @@ object GUI extends JFXApp3:
       enter.onAction=(e: ActionEvent)=>
         try
           val value=textinput.text.value.split(",")
-          val rentalr= rentalmanager.reservations.filter(_.renter.toString==value(0))
-          val rent1= rentalr.filter(_.item.name==value(1))
-          val rent2= rent1.filter(_.count==value(2).toInt).head
-          rentalmanager.removeReservation(rent2)
+          val renter= value(0)
+          val itemName = value(1)
+          val count = value(2).toInt
+          val rentalr = rentalmanager.reservations.filter(_.renter.name == value(0))
+          val rent = rentalr.filter(_.item.exists(_.name == itemName))
+          val reservations= rent.filter(_.count.contains(count))
+
+          rentalmanager.removeReservation(reservations.head)
             box.visible = true
             back.visible = true
           val success= new Label("Reservation removed succesfully")
             box.children+=success
         catch
             //case e:IndexOutOfBoundsException =>  throw Exception("Write the inputs as asked")
-          case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+          case a:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
           case c:NoSuchElementException => box.children+= Label("Item doesn't exist")
+          case e: IllegalArgumentException => box.children += Label(e.getMessage())
     end removereservation
 
     def comment=
@@ -453,8 +514,9 @@ object GUI extends JFXApp3:
             else
               box.children += commentlabel
           catch
-            case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+            case a:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
             case c:NoSuchElementException => box.children+= Label("Item doesn't exist")
+            case e: IllegalArgumentException => box.children += Label(e.getMessage())
 
         enter3.onAction= (e: ActionEvent) =>
           try
@@ -466,11 +528,12 @@ object GUI extends JFXApp3:
             else
               box.children+= commentlabel
           catch
-            case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+            case a:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
             case c:NoSuchElementException => box.children+= Label("Renter doesn't exist")
+            case e: IllegalArgumentException => box.children += Label(e.getMessage())
 
       add.onAction= (e: ActionEvent) =>
-        val typerlabel= Label("Put item type to add comments")
+        val typerlabel= Label("Put item to add comments")
           box.children+=typerlabel
         val textbox= new TextField()
           box.children+= textbox
@@ -512,9 +575,9 @@ object GUI extends JFXApp3:
             val item=rentalmanager.items.find(_.name==values).head
             item.addComment(commentvalue1)
           catch
-            case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+            case a:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
             case c:NoSuchElementException => box.children+= Label("Item doesn't exist")
-
+            case e: IllegalArgumentException => box.children += Label(e.getMessage())
         enter2.onAction= (e: ActionEvent) =>
           try
             val valuerenter= renterTextBox.text.value
@@ -522,31 +585,15 @@ object GUI extends JFXApp3:
             val renter= rentalmanager.renters.filter(_.name==valuerenter).head
             renter.addComment(valuerentercomment)
           catch
-            case e:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
+            case a:IndexOutOfBoundsException => box.children+= Label("Please write the inputs as asked")
             case c:NoSuchElementException => box.children+= Label("Item doesn't exist")
+            case e: IllegalArgumentException => box.children += Label(e.getMessage())
 
 
 
     end comment
 
-        /*root2.add(box,0,1)
 
-        box.children+= Label("Write renter name, item name, count")
-        box.layoutX= 70
-        box.layoutY = 40
-        box.children+=textinput
-        textinput.onAction = (e: ActionEvent)=> println(textinput.text.value)
-      val enter= new Button("Enter")
-      val back= new Button("Back")
-        box.children+=back
-        back.onAction= (e:ActionEvent)=>
-          box.visible = false
-          back.visible=false
-
-        box.children+=enter
-      enter.onAction=(e: ActionEvent)=>
-        try
-          val value=textinput.text.value.split(",")*/
 //accounting view
 
       val accounting= new Button("accounting")
@@ -558,10 +605,40 @@ object GUI extends JFXApp3:
       val button2= new Button("Income by Item")
       val button3= new Button("Expenses by ItemType")
       val button4= new Button("Expenses by Item")
-      val accountingmanager= new AccountingManager
+      val button5= new Button("Gained demand")
 
-      val hbox= new HBox(20,button1,button2,button3,button4,backbutton3)
+
+      val hbox= new HBox(20,button1,button2,button3,button4,backbutton3, button5)
       root3.children+=hbox
+      def gainedDemand=
+        val box= new VBox()
+        root3.add(box,0,1)
+        val rentalRecords = rentalmanager.rentalRecords
+
+        // Count the number of times each item was rented
+        val itemCounts = Map[String, Int]()
+
+        rentalRecords.foreach(record =>
+          val itemName = record.item.name
+          if (itemCounts.contains(itemName)) then
+            itemCounts(itemName) += record.count
+          else
+            itemCounts(itemName) = record.count)
+
+        val chartData = FXCollections.observableArrayList[PieChart.Data]()
+        for each <- itemCounts.toMap do
+         chartData.add(new Data(s"${each._1}",each._2))
+
+        val chart = new PieChart(chartData)
+
+        chart.title = "Gained demand"
+        box.children += chart
+        val back = new Button("Back")
+        box.children+= back
+        back.onAction= (e: ActionEvent) =>
+          box.visible = false
+          back.visible = false
+
 
       def incomebyitemtype=
         val box = new VBox()
@@ -717,11 +794,12 @@ object GUI extends JFXApp3:
       button2.onAction= (e: ActionEvent) => incomebyitem
       button3.onAction= (e: ActionEvent) => expensesbyitemtype
       button4.onAction= (e: ActionEvent) => expensebyitem
+      button5.onAction= (e: ActionEvent) => gainedDemand
 //record view
     def rentalRecord=
       val box= new VBox()
       root4.add(box,0,1)
-      box.children+= Label("Rental records")
+      box.children+= Label("All rental records:")
       val back= new Button("Back")
       box.children+= back
       back.onAction = (e: ActionEvent) =>
@@ -769,32 +847,6 @@ object GUI extends JFXApp3:
         removeReservation.onAction= (e: ActionEvent) => removereservation
         comments.onAction= (e: ActionEvent) => comment
 
-
-  /* val label= Label("Items:") // Title label
-      label.font = Font.font(20)
-      val vebox = new VBox(label)
-      root.add(vebox,0,4)*/
-
-     /* val add= new Menu("add item")
-      val a= new MenuItem("name:")
-      val b= new MenuItem("description:")
-      val c= new MenuItem("price:")
-      val d= new MenuItem("hourlyprice:")
-      val e= new MenuItem("dailyprice:")
-      val f= new MenuItem("weeklyprice:")
-      val g= new MenuItem("monthlyprice:")
-      val h= new MenuItem("available count:")
-
-      add.items= List(a,b,c,d,e,f,g,h)
-      val remove = new Menu("remove item")
-      val accountin = new Menu("accounting")
-      val record= new Menu("records")
-
-
-      val menubar= new MenuBar(add,remove,accountin,record)
-        menubar.layoutY = 100
-        menubar.prefWidth(600)
-        vbox.children+=menubar*/
 
 
 

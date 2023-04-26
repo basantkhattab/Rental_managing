@@ -11,13 +11,13 @@ class RentalManager:
   val rentalRecords = ListBuffer[RentalRecord]()
   val reservations = ListBuffer[Reservation]()
   val renteditems= ListBuffer[RentalRecord]()
-  val itemtypes= items.map(_.itemType).distinct.toList
+
+  def itemtypes=items.map(_.itemType)
 
   def getItemsByType(itemType: String): List[Item] =
     items.filter(_.itemType == itemType).toList
 
   def addItem(item: Item): Unit =
-    itemsrecord += item
     items += item
 
 
@@ -32,7 +32,7 @@ class RentalManager:
   /*def removeItem(item: Item): Unit =
     items-=item
 */
-  def rentItem(renter: Renter, itemname: String, count: Int, rentStart: LocalDateTime, rentEnd: LocalDateTime): RentalRecord =
+  def rentItem(renter: Renter, itemname: String, count: Int, rentStart: LocalDateTime, rentEnd: LocalDateTime): Unit=
 // Check if item is available
 // Calculate cost based on rental period
 // Update available count of item
@@ -48,10 +48,12 @@ class RentalManager:
       renter.addRentalRecord(rentalRecord)
       renteditems += rentalRecord
       rentalRecords += rentalRecord
-    rentalRecord
+      rentalRecord
+    else throw IllegalArgumentException("Item not available")
 
 
-  def returnItem(rentalRecord: RentalRecord): RentalRecord =
+
+  def returnItem(rentalRecord: RentalRecord):  Unit=
 // Update available count of item
 // Remove rental record from renter's rental records
 // Add rental record to rental records
@@ -61,7 +63,9 @@ class RentalManager:
       itemRented.get.availableCount += rentalRecord.count
       rentalRecord.renter.removeRentalRecord(rentalRecord)
       renteditems -= rentalRecord
-    rentalRecord
+      rentalRecord
+    else throw new IllegalArgumentException("Item not found")
+
 
 
   def addRenter(renter: Renter): Unit = 
@@ -70,22 +74,51 @@ class RentalManager:
   def removeRenter(renter: Renter): Unit = 
     renters -= renter
 
-  def addReservation(renter: Renter, itemname: String, count: Int, rentStart: LocalDateTime, rentEnd: LocalDateTime): Unit =
+  def addReservation(renter: Renter, items: ListBuffer[Item],  counts: ListBuffer[Int], rentStart: LocalDateTime, rentEnd: LocalDateTime): Unit =
 // Check if all items in reservation are available for the rental period
 // Add reservation to reservations list
     val duration = Duration.between(rentStart, rentEnd)
+    val prices = items.map(_.getPrice(duration))
+    val reserved= ListBuffer[Reservation]()
+    if (items.length == counts.length) then
+      val availableItems = items.zip(counts).filter(itemAndCount => itemAndCount._1.availableCount >= itemAndCount._2)
+
+      if (availableItems.length == items.length) then
+        availableItems.foreach(itemAndCount =>
+          val item = itemAndCount._1
+          val count = itemAndCount._2
+          item.availableCount -= count
+          val reservation = new Reservation(renter, items, counts, rentStart, rentEnd)
+          reserved += reservation)
+
+        // add all reservations to the reservations list
+        reserved.foreach(reservation => reservations += reservation)
+      else throw new IllegalArgumentException("Something went wrong")
+
+
+  /* val duration = Duration.between(rentStart, rentEnd)
     val finditem= items.find(itemname==_.name)
     val price= finditem.head.getPrice(duration)
     val reservation= new Reservation(renter,finditem.head,count,rentStart, rentEnd)
     if finditem.nonEmpty && finditem.get.availableCount>=count then
       finditem.head.availableCount-=count
       reservations+=reservation
-      reservation
+      reservation*/
 
 
 
   def removeReservation(reservation: Reservation): Unit =
-    reservations -= reservation
+
+  // Update available count of all items in the reservation
+    if (reservations.contains(reservation)) then
+      reservations -= reservation
+      reservation.item.zip(reservation.count).foreach(itemAndCount =>
+        val item = itemAndCount._1
+        val count = itemAndCount._2
+        item.availableCount += count)
+    else throw new IllegalArgumentException("Something went wrong")
+  // reservations -= reservation
+
 
   def saveToFile(rentalRecords: ListBuffer[RentalRecord], name: String): Unit =
     val file = new File(name)
